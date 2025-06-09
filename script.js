@@ -18,7 +18,10 @@ function cvrtDt2n(yyyymmdd) {
   return dayOfYear;
 }
 
-const jsonData = fetch('./data.json').then(res => {
+async function run() {
+  console.log("lets goooo")
+
+  const jsonData = fetch('./data.json').then(res => {
   if (!res) {throw new Error("망함");}
   return res.json();
   // document.getElementById("result").innerHTML = "망함"
@@ -27,9 +30,7 @@ const jsonData = fetch('./data.json').then(res => {
 }).catch(error => { 
   document.getElementById("result").innerHTML = `에러남 ${ error}`;
 });
-
-async function run() {
-  console.log("lets goooo")
+  
   const NO2yArr = jsonData.DATA.slice(0,168).map(entry => entry.no2 * 1000)
   const NO2xArr = jsonData.DATA.slice(0,168).map(entry => cvrtDt2n(entry.msrdt))
 
