@@ -27,10 +27,11 @@ const jsonData = fetch('./data.json').then(res => {
 });
 
 async function run() {
-  const NO2xArr = jsonData.DATA.slice(0,168).map(entry => entry.no2 * 1000)
-  const NO2yArr = jsonData.DATA.slice(0,168).map(entry => cvrtDt2n(entry.msrdt))
+  console.log("lets goooo")
+  const NO2yArr = jsonData.DATA.slice(0,168).map(entry => entry.no2 * 1000)
+  const NO2xArr = jsonData.DATA.slice(0,168).map(entry => cvrtDt2n(entry.msrdt))
 
-  alert("hehe");
+  console.log("good")
 
   // Create a simple model.
   const model = tf.sequential();
@@ -40,13 +41,13 @@ async function run() {
   model.compile({loss: 'meanSquaredError', optimizer: 'sgd'});
 
   // Generate some synthetic data for training. (y = 2x - 1)
-  const xs = tf.tensor2d(NO2yArr, [NO2yArr.length, 1]);
-  const ys = tf.tensor2d(NO2xArr, [NO2xArr.length, 1]);
+  const xs = tf.tensor2d(NO2xArr, [NO2xArr.length, 1]);
+  const ys = tf.tensor2d(NO2yArr, [NO2yArr.length, 1]);
 
   // Train the model using the data.
   await model.fit(xs, ys, {epochs: 50});
 
-  alert("hehehehe")
+  console.log("hehehehe")
   
   // Use the model to do inference on a data point the model hasn't seen.
   // Should print approximately 39.
