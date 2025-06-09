@@ -13,6 +13,8 @@ function cvrtDt2n(yyyymmdd) {
   // 밀리초 차이를 '일(day)'로 변환
   const dayOfYear = Math.floor((date - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
 
+  console.log("yay")
+
   return dayOfYear;
 }
 
