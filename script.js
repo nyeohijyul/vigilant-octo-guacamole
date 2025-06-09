@@ -20,6 +20,8 @@ const jsonData = fetch('./data.json').then(res => {if (!res) {throw new Error("ë
 const NO2xArr = jsonData.DATA.slice(0,168).map(entry => [entry.no2 * 1000])
 const NO2yArr = jsonData.DATA.slice(0,168).map(entry => [cvrtDt2n(entry.msrdt)])
 
+document.getElementById("result").innerHTML = NO2xArr
+
 async function run() {
   // Create a simple model.
   const model = tf.sequential();
