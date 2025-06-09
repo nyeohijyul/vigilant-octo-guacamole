@@ -30,6 +30,8 @@ async function run() {
   const NO2xArr = jsonData.DATA.slice(0,168).map(entry => entry.no2 * 1000)
   const NO2yArr = jsonData.DATA.slice(0,168).map(entry => cvrtDt2n(entry.msrdt))
 
+  alert("hehe");
+
   // Create a simple model.
   const model = tf.sequential();
   model.add(tf.layers.dense({units: 1, inputShape: [1]}));
@@ -44,6 +46,8 @@ async function run() {
   // Train the model using the data.
   await model.fit(xs, ys, {epochs: 50});
 
+  alert("hehehehe")
+  
   // Use the model to do inference on a data point the model hasn't seen.
   // Should print approximately 39.
   document.getElementById('result').innerText =
