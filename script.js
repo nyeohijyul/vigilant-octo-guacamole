@@ -17,7 +17,7 @@ function cvrtDt2n(yyyymmdd) {
 
   return dayOfYear;
 }
-
+console.log("hello")
 async function run() {
   console.log("lets goooo")
 
