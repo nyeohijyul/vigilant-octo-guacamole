@@ -1,5 +1,55 @@
-// const obj = JSON.parse(jsonData);
+function cvrtDt2n(yyyymmdd) {
+  const year = yyyymmdd.slice(0, 4);
+  const month = parseInt(yyyymmdd.slice(4, 6), 10);
+  const day = parseInt(yyyymmdd.slice(6, 8), 10);
+  const date = new Date(year, month - 1, day);
+  const startOfYear = new Date(year, 0, 1);
+  const dayOfYear = Math.floor((date - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
+  return dayOfYear;
+}
 
+async function run() {
+  console.log("🚀 run() 시작");
+
+  try {
+    const res = await fetch('./data.json');
+    if (!res.ok) throw new Error("데이터 요청 실패");
+
+    const jsonData = await res.json();
+
+    console.log("✅ 데이터 불러오기 성공");
+
+    const NO2yArr = jsonData.DATA.slice(0, 168).map(entry => entry.no2 * 1000);
+    const NO2xArr = jsonData.DATA.slice(0, 168).map(entry => cvrtDt2n(entry.msrdt.slice(0, 8)));
+
+    console.log("📊 학습 데이터 준비 완료");
+
+    const model = tf.sequential();
+    model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
+    model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });
+
+    const xs = tf.tensor2d(NO2xArr, [NO2xArr.length, 1]);
+    const ys = tf.tensor2d(NO2yArr, [NO2yArr.length, 1]);
+
+    console.log("🔁 학습 시작...");
+    await model.fit(xs, ys, { epochs: 50 });
+
+    console.log("✅ 학습 완료");
+
+    const prediction = model.predict(tf.tensor2d([160], [1, 1])).dataSync();
+    document.getElementById('result').innerText = `예측값: ${prediction}`;
+    console.log("🎉 예측 완료:", prediction);
+
+  } catch (error) {
+    document.getElementById('result').innerText = `❌ 에러: ${error.message}`;
+    console.error("에러 발생:", error);
+  }
+}
+
+run();
+
+// const obj = JSON.parse(jsonData);
+/*
 function cvrtDt2n(yyyymmdd) {
   // MMDD → MM, DD 추출
     const year = yyyymmdd.slice(0,4);
@@ -83,7 +133,7 @@ async function run() {
       model.predict(tf.tensor2d([160], [1, 1])).dataSync();
   */
 }
-
+/*
 run();
-
+*/
 
