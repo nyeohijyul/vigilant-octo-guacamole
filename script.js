@@ -27,8 +27,8 @@ async function run() {
   // document.getElementById("result").innerHTML = "망함"
 }).then(dt => {
   document.getElementById("result").innerHTML = "성공";
-    const NO2yArr = jsonData.DATA.slice(0,168).map(entry => entry.no2 * 1000)
-  const NO2xArr = jsonData.DATA.slice(0,168).map(entry => cvrtDt2n(entry.msrdt.slice(0,8))
+    const NO2yArr = dt.DATA.slice(0,168).map(entry => entry.no2 * 1000)
+  const NO2xArr = dt.DATA.slice(0,168).map(entry => cvrtDt2n(entry.msrdt.slice(0,8)))
 
   console.log("good")
 
