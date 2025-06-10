@@ -9,6 +9,47 @@ function cvrtDt2n(yyyymmdd) {
 }
 
 async function run() {
+  console.log("lets goooo");
+
+  // JSON 파일 비동기 로딩 (await 사용!)
+  let jsonData;
+  try {
+    const response = await fetch('./data.json');
+    jsonData = await response.json();
+    document.getElementById("result").innerText = "성공";
+  } catch (error) {
+    document.getElementById("result").innerText = `에러남: ${error}`;
+    return; // 에러 났으면 이후 코드 실행 안 함
+  }
+
+  // x, y 데이터 준비
+  const NO2yArr = jsonData.DATA.slice(0, 168).map(entry => entry.no2 * 1000);
+  const NO2xArr = jsonData.DATA.slice(0, 168).map(entry =>
+    cvrtDt2n(entry.msrdt.slice(0, 8))  // 날짜 문자열이 "202506091000"일 경우 대비
+  );
+
+  console.log("good");
+
+  // TensorFlow.js 모델 구성
+  const model = tf.sequential();
+  model.add(tf.layers.dense({ units: 1, inputShape: [1] }));
+  model.compile({ loss: 'meanSquaredError', optimizer: 'sgd' });
+
+  const xs = tf.tensor2d(NO2xArr, [NO2xArr.length, 1]);
+  const ys = tf.tensor2d(NO2yArr, [NO2yArr.length, 1]);
+
+  await model.fit(xs, ys, { epochs: 50 });
+
+  console.log("hehehehe");
+
+  const prediction = model.predict(tf.tensor2d([160], [1, 1])).dataSync();
+  document.getElementById('result').innerText = `예측값: ${prediction[0].toFixed(2)}`;
+}
+
+run();
+
+
+/*async function run() {
   console.log("🚀 run() 시작");
 
   try {
